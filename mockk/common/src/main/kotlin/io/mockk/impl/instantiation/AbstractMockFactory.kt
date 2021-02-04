@@ -87,7 +87,7 @@ abstract class AbstractMockFactory(
             log.debug { "Creating spyk for ${actualCls.toStr()} name=$newName, moreInterfaces=${moreInterfaces.contentToString()}" }
         }
 
-        val stub = SpyKStub(
+        val stub = spyStubFactory.create(
             actualCls,
             newName,
             gatewayAccess,
@@ -137,5 +137,17 @@ abstract class AbstractMockFactory(
         val idCounter = InternalPlatformDsl.counter()
 
         fun newId(): Long = idCounter.increment() + 1
+
+        var spyStubFactory: StubFactory = object: StubFactory {
+            override fun <T : Any> create(cls: KClass<out T>, name: String, gatewayAccess: StubGatewayAccess, recordPrivateCalls: Boolean, mockType: MockType): MockKStub {
+                return SpyKStub(
+                        cls,
+                        name,
+                        gatewayAccess,
+                        recordPrivateCalls || MockKSettings.recordPrivateCalls,
+                        MockType.SPY
+                )
+            }
+        }
     }
 }
