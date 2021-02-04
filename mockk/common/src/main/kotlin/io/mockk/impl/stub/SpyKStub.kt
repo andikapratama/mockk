@@ -3,7 +3,7 @@ package io.mockk.impl.stub
 import io.mockk.Invocation
 import kotlin.reflect.KClass
 
-class SpyKStub<T : Any>(
+open class SpyKStub<T : Any>(
     cls: KClass<out T>,
     name: String,
     gatewayAccess: StubGatewayAccess,
